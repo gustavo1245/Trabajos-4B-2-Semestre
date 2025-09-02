@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tabla de datos</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+        .pais-bg {
+            background-color: #6c757d;
+            color: #fff;
+            border-radius: 12px;
+            padding: 4px 12px;
+            display: inline-block;
+        }
+        .detalles-btn {
+            color: #fff;
+        }
+        .detalles-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #00bcd4;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .detalles-btn:hover {
+            background: #0097a7;
+        }
+        .usuarios-bg {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 12px;
+            padding: 4px 12px;
+            display: inline-block;
+        }
+        .filtros-box {
+            background: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            border-radius: 12px;
+            padding: 24px;
+        }
+    </style>
+    <!-- titulo -->
+
+    <div class="container" style="padding: 30px;">
+        <h1 class="text-center titulo" style="color: #007bff;">Plataformas Digitales</h1>
+        <h6 class="text-center sub-t">Visualización de datos de las principales plataformas digitales</h6>
+    </div>
+
+    <!-- fin titulo -->
+
+    <!-- filtros y ordenamiento -->
+
+    <div class="container mt-4 filtros-box">
+        <h5>Filtros y Ordenamiento</h5>
+        <div style="display: flex; justify-content: space-between;">
+            <div>
+                <p>Filtrar por país:</p>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Todos los países</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+            <div>
+                <p>Ordenar por:</p>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Nombre</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+            <div>
+                <p>Dirección:</p>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected>Ascendente</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- fin filtros y ordenamiento -->
+
+    <!-- tabla -->
+    <div class="container mt-4">
+    <table class="table table-striped table-bordered" style="box-shadow: 0 4px 16px rgba(0,0,0,0.12);">
+            <thead class="table-dark">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Usuarios</th>
+                    <th>Fundado</th>
+                    <th>País</th>
+                    <th>Detalles</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for plataforma in datos %}
+                <tr>
+                    <td>
+                        {% set nombre = plataforma.nombre.lower() %}
+                        {% if 'discord' in nombre %}
+                            <img src="/static/img/1691730813discord-icon-png.png" alt="Discord" width="28" style="vertical-align:middle; margin-right:8px;">
+                        {% elif 'instagram' in nombre %}
+                            <img src="/static/img/instagram-logo-instagram-icon-transparent-free-png.webp" alt="Instagram" width="28" style="vertical-align:middle; margin-right:8px;">
+                        {% elif 'netflix' in nombre %}
+                            <img src="/static/img/netflix-logo-png-11593869496jqso5gxgsy.png" alt="Netflix" width="28" style="vertical-align:middle; margin-right:8px;">
+                        {% elif 'youtube' in nombre %}
+                            <img src="/static/img/youtube-logo-youtube-icon-transparent-free-png.webp" alt="YouTube" width="28" style="vertical-align:middle; margin-right:8px;">
+                        {% elif 'spotify' in nombre %}
+                            <img src="/static/img/png-transparent-spotify-logo-streaming-media-spotify-icon-text-logo-music-download.png" alt="Spotify" width="28" style="vertical-align:middle; margin-right:8px;">
+                        {% elif 'tiktok' in nombre %}
+                            <img src="/static/img/tiktok-logo-on-transparent-background-free-vector.jpg" alt="TikTok" width="28" style="vertical-align:middle; margin-right:8px;">
+                        {% elif 'twitch' in nombre %}
+                            <img src="/static/img/twitch-logo-twitch-icon-transparent-free-png.webp" alt="Twitch" width="28" style="vertical-align:middle; margin-right:8px;">
+                        {% endif %}
+                        {{ plataforma.nombre }}
+                    </td>
+                    <td><span class="usuarios-bg">{{ plataforma.usuarios }}</span></td>
+                    <td>{{ plataforma.fundado }}</td>
+                    <td><span class="pais-bg">{{ plataforma.pais }}</span></td>
+                    <td>
+                        <button class="detalles-btn">i</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- fin tabla -->
+
+    <!-- footer -->
+
+    <footer class="text-center text-lg-start bg-light text-muted" style="margin-top: 50px;">
+        <div class="text-center p-4">
+            <p>Visualización de datos desarollada con Flask y Bootstrap.</p>
+            <p>Los datos mostrados son ficticios para fines educativos.</p>
+        </div>
+    </footer>
+
+    <!-- fin footer -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
