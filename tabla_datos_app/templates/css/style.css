@@ -1,0 +1,23 @@
+body {
+    margin: 0 auto;
+}
+
+
+.titulo {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.usuarios-bg {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 12px;
+    padding: 4px 12px;
+    display: inline-block;
+}
+
+.sub-t {
+    font-size: 1.25rem;
+    color: #666;
+}
