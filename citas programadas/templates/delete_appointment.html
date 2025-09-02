@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Cita</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h2>Eliminar Cita</h2>
+    <p>¿Estás seguro que deseas eliminar la cita <strong>{{ appointment.title }}</strong> programada para el <strong>{{ appointment.date.strftime('%d/%m/%Y %H:%M') }}</strong>?</p>
+    <form method="POST">
+        <button type="submit">Eliminar</button>
+  <a href="{{ url_for('main.calendar') }}">Cancelar</a>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>

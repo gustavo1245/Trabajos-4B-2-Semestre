@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agregar Cita</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header>
+    <div style="max-width:900px; margin:0 auto; position:relative;">
+      <h1 style="margin:0; display:inline-block;">Calendario de Citas</h1>
+    </div>
+  </header>
+  <div class="container" style="max-width:400px; margin-top:32px;">
+    <h2>Agregar Nueva Cita</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <label>Título:</label>
+        <input type="text" name="title" required><br>
+        <label>Descripción:</label>
+        <textarea name="description"></textarea><br>
+        <label>Fecha y hora:</label>
+        <input type="datetime-local" name="date" required><br>
+        <button type="submit">Agregar</button>
+    </form>
+  <a href="{{ url_for('main.calendar') }}">Volver al calendario</a>
+</body>
+</html>

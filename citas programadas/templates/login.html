@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header>
+    <div style="max-width:900px; margin:0 auto; position:relative;">
+      <h1 style="margin:0; display:inline-block;">Calendario de Citas</h1>
+    </div>
+  </header>
+  <div class="container" style="max-width:400px; margin-top:32px;">
+    <h2>Iniciar Sesión</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <label>Usuario:</label>
+        <input type="text" name="username" required><br>
+        <label>Contraseña:</label>
+        <input type="password" name="password" required><br>
+        <button type="submit">Entrar</button>
+    </form>
+  <p>¿No tienes cuenta? <a href="{{ url_for('main.register') }}">Regístrate aquí</a></p>
+  <footer>
+    &copy; {{ now.year if now else '2025' }} Calendario de Citas
+  </footer>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Cita</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header>
+    <div style="max-width:900px; margin:0 auto; position:relative;">
+      <h1 style="margin:0; display:inline-block;">Calendario de Citas</h1>
+    </div>
+  </header>
+  <div class="container" style="max-width:400px; margin-top:32px;">
+    <h2>Editar Cita</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <label>Título:</label>
+        <input type="text" name="title" value="{{ appointment.title }}" required><br>
+        <label>Descripción:</label>
+        <textarea name="description">{{ appointment.description }}</textarea><br>
+        <label>Fecha y hora:</label>
+        <input type="datetime-local" name="date" value="{{ appointment.date.strftime('%Y-%m-%dT%H:%M') }}" required><br>
+        <button type="submit">Guardar cambios</button>
+    </form>
+  <a href="{{ url_for('main.calendar') }}">Volver al calendario</a>
+</body>
+</html>

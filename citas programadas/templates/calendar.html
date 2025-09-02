@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendario de Citas</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        .profile-btn { float: right; background: #fff; color: #ff9800; border: 2px solid #ff9800; margin-right: 32px; margin-top: -8px; font-weight: 600; }
+        .profile-btn:hover { background: #ff9800; color: #fff; }
+        .modal-bg { display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.3); z-index: 1000; }
+        .modal { background: #fff; border-radius: 12px; max-width: 350px; margin: 120px auto; padding: 32px 24px; box-shadow: 0 2px 16px rgba(255,152,0,0.15); position: relative; }
+        .modal.dark { background: #222; color: #fff; }
+        .modal button, .modal a.button { width: 100%; margin-bottom: 12px; }
+        .close-modal {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #ff9800;
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+        .close-modal:hover {
+            color: #e65100;
+        }
+    body.dark { background: #222; color: #ff9800; }
+    body.dark .container, body.dark table { background: #333; color: #ff9800; }
+    body.dark th { background: #ff9800; color: #fff; }
+    body.dark td { border-bottom: 1px solid #444; color: #ff9800; }
+    body.dark .panel { background: #333; color: #ff9800; }
+    body.dark a { color: #ff9800; }
+    body.dark a:hover { color: #fff; }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="max-width:900px; margin:0 auto; position:relative;">
+            <h1 style="margin:0; display:inline-block;">Calendario de Citas</h1>
+            <button class="profile-btn" onclick="openProfileModal()">Ver perfil</button>
+        </div>
+    </header>
+    <div class="container">
+        <h2>Mis Citas Programadas</h2>
+        <table>
+            <tr>
+                <th>Título</th>
+                <th>Descripción</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            {% for cita in appointments %}
+            <tr>
+                <td>{{ cita.title }}</td>
+                <td>{{ cita.description }}</td>
+                <td>{{ cita.date.strftime('%d/%m/%Y %H:%M') }}</td>
+                <td>{{ cita.status }}</td>
+                <td>
+                    {% if cita.status == 'pendiente' and cita.date > now %}
+                        <a class="button" href="{{ url_for('main.edit_appointment', id=cita.id) }}">Editar</a>
+                        <a class="button" href="{{ url_for('main.delete_appointment', id=cita.id) }}">Eliminar</a>
+                    {% else %}
+                        No disponible
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a class="button" href="{{ url_for('main.add_appointment') }}">Agregar nueva cita</a>
+    </div>
+    <div class="modal-bg" id="profileModalBg">
+        <div class="modal" id="profileModal">
+            <button class="close-modal" onclick="closeProfileModal()">&times;</button>
+            <h2>Perfil</h2>
+            <button onclick="alert('Función de editar perfil próximamente')">Editar perfil</button>
+            <button onclick="toggleTheme()" id="themeBtn">Cambiar a modo oscuro</button>
+            <a class="button" href="{{ url_for('main.logout') }}">Cerrar sesión</a>
+        </div>
+    </div>
+    <footer>
+        &copy; {{ now.year }} Calendario de Citas
+    </footer>
+    <script>
+        function openProfileModal() {
+            document.getElementById('profileModalBg').style.display = 'block';
+        }
+        function closeProfileModal() {
+            document.getElementById('profileModalBg').style.display = 'none';
+        }
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('profileModalBg')) {
+                closeProfileModal();
+            }
+        }
+        function toggleTheme() {
+            var body = document.body;
+            var modal = document.getElementById('profileModal');
+            var btn = document.getElementById('themeBtn');
+            if (body.classList.contains('dark')) {
+                body.classList.remove('dark');
+                modal.classList.remove('dark');
+                btn.textContent = 'Cambiar a modo oscuro';
+            } else {
+                body.classList.add('dark');
+                modal.classList.add('dark');
+                btn.textContent = 'Cambiar a modo claro';
+            }
+        }
+    </script>
+</body>
+</html>
