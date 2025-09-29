@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tu Destino</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <!-- Generador de estrellas -->
+    <div class="stars">
+        {% for i in range(80) %}
+        <div class="star" style="
+            width: {{ range(1,4)|random }}px;
+            height: {{ range(1,4)|random }}px;
+            top: {{ range(0,100)|random }}vh;
+            left: {{ range(0,100)|random }}vw;">
+        </div>
+        {% endfor %}
+    </div>
+    <!-- fin Generador de estrellas -->
+
+    <div class="resultado-container">
+        <!-- Título con sol -->
+        <div class="resultado-titulo">
+            <div class="sol-icon">☀️</div>
+            <h1>Tu Destino ha sido Revelado</h1>
+            <div class="subtitulo">Las estrellas han hablado, {{ nombre }}</div>
+        </div>
+
+        <!-- Contenido principal -->
+        <div class="resultado-contenido">
+            <!-- Predicción principal -->
+            <div class="prediccion-principal">
+                <div class="estrella-verde">⭐</div>
+                <p>{{ mensaje }}</p>
+            </div>
+
+            <!-- Sección de análisis -->
+            <div class="analisis-seccion">
+                <div class="analisis-item color-analisis">
+                    <div class="icono-seccion">🎨</div>
+                    <h3>Tu Color</h3>
+                    <div class="color-circulo" style="background-color: {{ color }};"></div>
+                    <p>Tu preferencia por el color <strong>{{ color }}</strong> revela tu afinidad con el <strong>misterio</strong> y <strong>descubrimiento</strong>.</p>
+                </div>
+
+                <div class="analisis-item animal-analisis">
+                    <div class="icono-seccion">🐾</div>
+                    <h3>Tu Animal</h3>
+                    <p>Tu conexión con el <strong>{{ animal }}</strong> simboliza tu naturaleza de <strong>independencia</strong> y <strong>misterio</strong>.</p>
+                </div>
+            </div>
+
+            <!-- Número de la suerte -->
+            <div class="numero-suerte">
+                <h3>Tu número de la suerte</h3>
+                <div class="numero-circulo">{{ range(1, 100)|random }}</div>
+                <p>Este número te acompañará en momentos importantes.</p>
+            </div>
+
+            <!-- Mensaje adicional basado en edad -->
+            <div class="mensaje-edad">
+                <p>A tus <strong>{{ edad }} años</strong>, estás en un momento favorable para aprovechar nuevas oportunidades.</p>
+            </div>
+
+            <!-- Botón para consultar de nuevo -->
+            <button onclick="window.location.href='/'" class="btn-consultar">🔄 Consultar de nuevo</button>
+
+            <!-- Mensaje final -->
+            <div class="mensaje-final">
+                <p>Las estrellas te han hablado hoy, {{ nombre }}.</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

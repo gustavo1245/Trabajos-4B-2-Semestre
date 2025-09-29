@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Juego del Destino</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="colores-fondo">
+        <!-- titulo -->
+        <div class="titulo-container fondo-titulo">
+            <h1 style="color: white;">El Juego del Destino</h1>
+            <div class="titulo-sub" style="color: white;">Descubre lo que te depara el futuro</div>
+        </div>
+        <!-- fin titulo -->
+
+        <!-- Generador de estrellas -->
+        <div class="stars">
+            {% for i in range(80) %}
+            <div class="star" style="
+                width: {{ range(1,4)|random }}px;
+                height: {{ range(1,4)|random }}px;
+                top: {{ range(0,100)|random }}vh;
+                left: {{ range(0,100)|random }}vw;">
+            </div>
+            {% endfor %}
+        </div>
+        <!-- fin Generador de estrellas -->
+
+        <!-- formulario -->
+
+        <form action="/enviar" method="post">
+            
+            <div class="form-group">
+                <div class="icon">👤</div>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+            </div>
+
+            <div class="form-group">
+                <div class="icon">🎂</div>
+                <input type="number" id="edad" name="edad" min="1" placeholder="Tu edad" required>
+                <div class="plus-icon">+</div>
+            </div>
+
+            <div class="form-group">
+                <div class="icon">🎨</div>
+                <input type="text" id="color" name="color" placeholder="Tu color favorito" required>
+                <div class="suggestion">Ej. rojo, azul, verde, morado, amarillo...</div>
+            </div>
+
+            <div class="form-group">
+                <div class="icon">🐾</div>
+                <input type="text" id="animal" name="animal" placeholder="Tu animal favorito" required>
+                <div class="suggestion">Ej. perro, gato, águila, león, delfín...</div>
+            </div>
+
+            <div class="crystal-ball">
+                <img src="static/imagenes/esfera.png" alt="Esferas del destino">
+            </div>
+
+            <button type="submit">✏️ Revelar mi destino</button>
+        </form>
+        <!-- fin formulario -->
+    </div>
+</body>
+
+</html>
+
+
