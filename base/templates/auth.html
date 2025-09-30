@@ -1,0 +1,401 @@
+{% extends 'base.html' %}
+{% block title %}Vista de Inicio de Sesión{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="text-center mb-5">
+            <h1 class="display-5 mb-3">Bienvenido al Inicio de Sesión</h1>
+            <p class="lead text-muted"></p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- Sección de registro de usuario -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3 class="mb-0">✨ Registrate</h3>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages(category_filter=['registro']) %}
+                {% if messages %}
+                <div class="alert alert-warning">
+                    {% for message in messages %}
+                    <p class="mb-1">⚠️ {{ message }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <form action="/usuarios/procesar_registro" method="post">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" name="nombre" placeholder="Tu nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellido" class="form-label">Apellido:</label>
+                        <input type="text" class="form-control" name="apellido" placeholder="Tu apellido" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento:</label>
+                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                        <div class="form-text">
+                            <small class="text-muted">Debes ser mayor de 18 años para registrarte.</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edad" class="form-label">Edad:</label>
+                        <input type="number" class="form-control" id="edad" name="edad" placeholder="Tu edad" min="18" max="120" readonly>
+                        <div class="form-text">
+                            <small class="text-muted">Se calculará automáticamente desde tu fecha de nacimiento.</small>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" name="email" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña:</label>
+                        <input type="password" class="form-control" id="password" name="password"
+                            placeholder="Mínimo 8 caracteres, 1 mayúscula y 1 número" required>
+                        <div class="form-text">
+                            <small class="text-muted">Debe contener al menos 8 caracteres, una letra mayúscula y un
+                                número.</small>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label">Confirmar Contraseña:</label>
+                        <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                            placeholder="Repite tu contraseña" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">🚀 Registrarte </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h3 class="mb-0">🎒 Iniciar Sesión</h3>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages(category_filter=['login']) %}
+                {% if messages %}
+                <div class="alert alert-warning">
+                    {% for message in messages %}
+                    <p class="mb-1">⚠️ {{ message }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <form action="/usuarios/procesar_login" method="post">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" class="form-control" name="email" placeholder="tu@email.com" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Contraseña:</label>
+                        <input type="password" class="form-control" name="password" placeholder="Tu contraseña"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">🌟 Iniciar la Sesión</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+        const edadInput = document.getElementById('edad');
+        const fechaNacimientoInput = document.getElementById('fecha_nacimiento');
+
+        function validatePassword(password) {
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasNumber = /\d/.test(password);
+            const hasMinLength = password.length >= 8;
+            const hasNoSpaces = !/\s/.test(password);
+
+            return {
+                hasUpperCase,
+                hasNumber,
+                hasMinLength,
+                hasNoSpaces,
+                isValid: hasUpperCase && hasNumber && hasMinLength && hasNoSpaces
+            };
+        }
+
+        // Función para calcular edad desde fecha de nacimiento
+        function calculateAge(birthDate) {
+            const today = new Date();
+            const birth = new Date(birthDate);
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        // Función para validar fecha de nacimiento
+        function validateBirthDate(birthDate) {
+            if (!birthDate) {
+                return {
+                    isValid: false,
+                    age: 0,
+                    message: "Selecciona tu fecha de nacimiento"
+                };
+            }
+
+            const today = new Date();
+            const birth = new Date(birthDate);
+            const age = calculateAge(birthDate);
+
+            if (birth > today) {
+                return {
+                    isValid: false,
+                    age: 0,
+                    message: "La fecha de nacimiento no puede ser futura"
+                };
+            }
+
+            if (age < 18) {
+                return {
+                    isValid: false,
+                    age: age,
+                    message: `Debes ser mayor de 18 años (tienes ${age} años)`
+                };
+            }
+
+            if (age > 120) {
+                return {
+                    isValid: false,
+                    age: age,
+                    message: "Por favor, verifica tu fecha de nacimiento"
+                };
+            }
+
+            return {
+                isValid: true,
+                age: age,
+                message: `Edad válida: ${age} años`
+            };
+        }
+
+        // Función para mostrar feedback de fecha de nacimiento
+        function showBirthDateFeedback(input, validation) {
+            // Remover feedback anterior
+            const existingFeedback = input.parentNode.querySelector('.birth-date-feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
+
+            // Crear nuevo feedback
+            const feedback = document.createElement('div');
+            feedback.className = 'birth-date-feedback mt-1';
+
+            let feedbackHTML = '<small>';
+            if (validation.isValid) {
+                feedbackHTML += `<span class="text-success">✓ ${validation.message}</span>`;
+            } else {
+                feedbackHTML += `<span class="text-danger">✗ ${validation.message}</span>`;
+            }
+            feedbackHTML += '</small>';
+
+            feedback.innerHTML = feedbackHTML;
+            input.parentNode.appendChild(feedback);
+
+            // Cambiar el color del borde del input
+            if (validation.isValid) {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            } else {
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+            }
+        }
+
+        function showPasswordFeedback(input, validation) {
+
+            const existingFeedback = input.parentNode.querySelector('.password-feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
+
+            const feedback = document.createElement('div');
+            feedback.className = 'password-feedback mt-1';
+
+            let feedbackHTML = '<small>';
+            feedbackHTML += validation.hasMinLength ?
+                '<span class="text-success">✓ Al menos 8 caracteres</span>' :
+                '<span class="text-danger">✗ Al menos 8 caracteres</span>';
+            feedbackHTML += '<br>';
+            feedbackHTML += validation.hasUpperCase ?
+                '<span class="text-success">✓ Una letra mayúscula</span>' :
+                '<span class="text-danger">✗ Una letra mayúscula</span>';
+            feedbackHTML += '<br>';
+            feedbackHTML += validation.hasNumber ?
+                '<span class="text-success">✓ Un número</span>' :
+                '<span class="text-danger">✗ Un número</span>';
+            feedbackHTML += '<br>';
+            feedbackHTML += validation.hasNoSpaces ?
+                '<span class="text-success">✓ Sin espacios</span>' :
+                '<span class="text-danger">✗ Sin espacios</span>';
+            feedbackHTML += '</small>';
+
+            feedback.innerHTML = feedbackHTML;
+            input.parentNode.appendChild(feedback);
+
+            if (validation.isValid) {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            } else {
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+            }
+        }
+
+        passwordInput.addEventListener('input', function () {
+            const validation = validatePassword(this.value);
+            showPasswordFeedback(this, validation);
+        });
+
+        // Prevenir que se escriban espacios en la contraseña
+        passwordInput.addEventListener('keypress', function (e) {
+            if (e.key === ' ') {
+                e.preventDefault();
+            }
+        });
+
+        // También prevenir espacios en el campo de confirmar contraseña
+        confirmPasswordInput.addEventListener('keypress', function (e) {
+            if (e.key === ' ') {
+                e.preventDefault();
+            }
+        });
+
+        // Validación de edad
+        function validateAge(age) {
+            const ageNumber = parseInt(age);
+            const isValidAge = !isNaN(ageNumber) && ageNumber >= 18 && ageNumber <= 120;
+            return {
+                isValidAge,
+                ageNumber
+            };
+        }
+
+        function showAgeFeedback(input, validation) {
+            // Remover feedback anterior
+            const existingFeedback = input.parentNode.querySelector('.age-feedback');
+            if (existingFeedback) {
+                existingFeedback.remove();
+            }
+
+            // Crear nuevo feedback
+            const feedback = document.createElement('div');
+            feedback.className = 'age-feedback mt-1';
+
+            let feedbackHTML = '<small>';
+            if (validation.isValidAge) {
+                feedbackHTML += '<span class="text-success">✓ Edad válida</span>';
+            } else {
+                if (isNaN(validation.ageNumber)) {
+                    feedbackHTML += '<span class="text-danger">✗ Ingresa un número válido</span>';
+                } else if (validation.ageNumber < 18) {
+                    feedbackHTML += '<span class="text-danger">✗ Debes ser mayor de 18 años</span>';
+                } else {
+                    feedbackHTML += '<span class="text-danger">✗ Edad no válida</span>';
+                }
+            }
+            feedbackHTML += '</small>';
+
+            feedback.innerHTML = feedbackHTML;
+            input.parentNode.appendChild(feedback);
+
+            // Cambiar el color del borde del input
+            if (validation.isValidAge) {
+                input.classList.remove('is-invalid');
+                input.classList.add('is-valid');
+            } else {
+                input.classList.remove('is-valid');
+                input.classList.add('is-invalid');
+            }
+        }
+
+        edadInput.addEventListener('input', function () {
+            const validation = validateAge(this.value);
+            showAgeFeedback(this, validation);
+        });
+
+        // Event listener para fecha de nacimiento
+        fechaNacimientoInput.addEventListener('change', function () {
+            const validation = validateBirthDate(this.value);
+            showBirthDateFeedback(this, validation);
+            
+            // Actualizar campo de edad automáticamente
+            if (validation.isValid) {
+                edadInput.value = validation.age;
+                edadInput.classList.remove('is-invalid');
+                edadInput.classList.add('is-valid');
+                
+                // Limpiar feedback de edad si existe
+                const existingAgeFeedback = edadInput.parentNode.querySelector('.age-feedback');
+                if (existingAgeFeedback) {
+                    existingAgeFeedback.remove();
+                }
+            } else {
+                edadInput.value = validation.age > 0 ? validation.age : '';
+                edadInput.classList.remove('is-valid');
+                edadInput.classList.add('is-invalid');
+            }
+        });
+
+        // Validar que las contraseñas coincidan
+        confirmPasswordInput.addEventListener('input', function () {
+            if (this.value && passwordInput.value) {
+                if (this.value === passwordInput.value) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                } else {
+                    this.classList.remove('is-valid');
+                    this.classList.add('is-invalid');
+                }
+            }
+        });
+
+        // Validar antes de enviar el formulario
+        const form = document.querySelector('form[action="/usuarios/procesar_registro"]');
+        form.addEventListener('submit', function (e) {
+            const validation = validatePassword(passwordInput.value);
+            const ageValidation = validateAge(edadInput.value);
+            const birthDateValidation = validateBirthDate(fechaNacimientoInput.value);
+            
+            if (!validation.isValid) {
+                e.preventDefault();
+                alert('Por favor, asegúrate de que la contraseña cumpla con todos los requisitos.');
+                return;
+            }
+            if (!birthDateValidation.isValid) {
+                e.preventDefault();
+                alert('Por favor, ingresa una fecha de nacimiento válida. Debes ser mayor de 18 años.');
+                return;
+            }
+            if (!ageValidation.isValidAge) {
+                e.preventDefault();
+                alert('Debes ser mayor de 18 años para registrarte.');
+                return;
+            }
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                e.preventDefault();
+                alert('Las contraseñas no coinciden.');
+                return;
+            }
+        });
+    });
+</script>
+{% endblock %}

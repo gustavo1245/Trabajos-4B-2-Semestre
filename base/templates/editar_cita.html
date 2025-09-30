@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Editar Reflexión{% endblock %}
+{% block content %}
+<h1>✏️ Editar Mi Reflexión</h1>
+<p class="text-muted">Perfecciona tu pensamiento y compártelo con otros viajeros</p>
+<a href="/citas" class="btn btn-secondary mb-3">🔙 Volver a Mi Viaje</a>
+{% with messages = get_flashed_messages(category_filter=['cita']) %}
+{% if messages %}
+<div class="alert alert-warning">
+    {% for message in messages %}
+    <p class="mb-0">⚠️ {{ message }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">📝 Editar Reflexión</h5>
+    </div>
+    <div class="card-body">
+        <form action="/citas/actualizar_editar" method="post">
+            <input type="hidden" name="id" value="{{ cita.id }}">
+            <div class="mb-3">
+                <label for="cita" class="form-label">Tu reflexión:</label>
+                <textarea name="cita" class="form-control" rows="4">{{ cita.cita }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-warning">💫 Actualizar Reflexión</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
